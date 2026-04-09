@@ -12,6 +12,9 @@ import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.hibernate.ReadOnlyMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.http.*;
@@ -48,6 +51,7 @@ public class StudentService {
     private String SUB_URL;
 
 
+    @Cacheable(value = "studentCache")
     @Transactional(rollbackFor = Exception.class)
     public StudentDTO regStudent(StudentDTO student) throws ContactNumberInvalidException {
 
@@ -75,6 +79,7 @@ public class StudentService {
     }
 
 
+    @Cacheable(value = "studentCache")
     @Transactional(rollbackFor = Exception.class)
     public List<StudentDTO> bulkRegistration(List<StudentDTO> listOfStudents) throws ContactNumberInvalidException {
 
@@ -136,6 +141,7 @@ public class StudentService {
     }
 
 
+    @Cacheable(value = "studentCache",key = "#id")
     @EntityGraph(attributePaths = {"subjects"})
     public StudentDTO getStudentById(Integer id) {
 
@@ -155,6 +161,8 @@ public class StudentService {
     }
 
 
+
+    @Cacheable(value = "studentCache",key = "#fname")
     @Retryable(retryFor = {Exception.class}, maxAttempts = 5,backoff = @Backoff(delay = 1500,multiplier = 2))
     public StudentDTO getStudentByName(String fname, String lname) {
         Optional<StudentDTO> student = repo.getStudentByName(fname, lname);
@@ -209,6 +217,7 @@ public class StudentService {
     }
 
 
+    @CachePut(value = "studentCache")
     @Transactional(rollbackFor = Exception.class)
     public StudentDTO updateStudent(StudentDTO student) throws ContactNumberInvalidException {
         Optional<StudentDTO> existing = repo.findById(student.getStu_id());
@@ -246,6 +255,7 @@ public class StudentService {
     }
 
 
+    @CacheEvict(value = "studentCache")
     @Transactional(rollbackFor = Exception.class)
     public StudentDTO unRegStudent(int id) throws AlreadyUnregisteredException {
         Optional<StudentDTO> existing = repo.findById(id);

@@ -15,7 +15,6 @@ import org.springframework.web.client.RestTemplate;
 @EnableJpaRepositories
 @EnableRetry
 @EnableCaching
-//@EnableFeignClients
 public class DemoApplication {
 
 	public static void main(String[] args) {
