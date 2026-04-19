@@ -317,5 +317,16 @@ public class StudentService {
     }
 
 
+    public List<StudentDTO> fetchByMark(float mark){
+        Optional<List<StudentDTO>> res =Optional.ofNullable(repo.findByMarksGreaterThan(mark));
+
+        if(res.isPresent()){
+            return res.get();
+        }else{
+            throw new NoSuchStudentFound("No Student found with specified stream");
+        }
+    }
+
+
 
 }

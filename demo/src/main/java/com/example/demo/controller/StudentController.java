@@ -82,4 +82,10 @@ public class StudentController {
         return ResponseEntity.status(HttpStatus.OK).body(subData);
     }
 
+    @GetMapping("/byMark")
+    public ResponseEntity<List<StudentDTO>> getStudentByStream(@RequestParam(value = "mark") float mark){
+        List<StudentDTO> getStudentList = serv.fetchByMark(mark);
+        return ResponseEntity.status(HttpStatus.OK).body(getStudentList);
+    }
+
 }

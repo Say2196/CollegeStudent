@@ -40,6 +40,7 @@ public class StudentDTO {
     private String lst_grd;
     @Transient
     @NonNull
+    @OneToMany(mappedBy = "student", fetch = FetchType.LAZY)
     private SubjectsDto subjects;
     @NonNull
     @Column(name = "gurd_name")
